@@ -1,1 +1,3 @@
-# elitech_gsp6_re
+# Introduction
+
+Access and share information about the communication protocol for the Elitech GSP-6 data logger.
