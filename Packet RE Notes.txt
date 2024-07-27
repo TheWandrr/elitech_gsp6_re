@@ -1,0 +1,69 @@
+Status for device COM5:
+-----------------------
+    Baud:            115200
+    Parity:          None
+    Data Bits:       8
+    Stop Bits:       1
+    Timeout:         ON
+    XON/XOFF:        OFF
+    CTS handshaking: OFF
+    DSR handshaking: OFF
+    DSR sensitivity: OFF
+    DTR circuit:     ON
+    RTS circuit:     OFF    
+    
+    Notes:
+    - 0x55 (U) may be start of data flag, 0x26 (&) may be end of data flag
+        - Last byte may also be a count or checksum. Seems to differ between packets.
+    - max 16 stored samples per packet during data download
+        - 16 bit fixed point temperature in celcius or humidity in % (0x00d8 = 216 = 21.6°C, 0x0158 = 344 = 34.4°C, 0x0260 = 608 = 60.8%)
+        - 0x22B8 = 8888, magic value for "NC" = probe not connected
+
+
+
+Get Status?
+
+    Request: 
+        cc000600d2
+
+    Response:
+        Offset  Bytes   Contents                                            Description
+        0       1       0x55                                                ?Start byte
+        1       1       0xFD                                                Device address (253)
+        2       1       0x01                                                ***?***
+        3       1       0x3e                                                ***?***
+        4       1       0x18                                                ***?***
+        5       1       0x00                                                ?Hours, logging interval (0)
+        6       1       0x00                                                ?Minutes, logging interval (0)
+        7       1       0x0a                                                Seconds, logging interval (10)
+        8       2       0x0190                                              H1, Temp 1 (40.0)
+        10      1       0x0014                                              L1, Temp 1 (2.0)
+        12      2       0x07e8                                              Year, last reading (2024)
+        14      1       0x07                                                Month, last reading (July)
+        15      1       0x1a                                                Day, last reading (26)
+        16      1       0x15                                                Hour, last reading (21)
+        17      1       0x26                                                Minute, last reading (38)
+        18      1       0x01                                                Second, last reading (1)
+        20      2       0x07e8                                              Year, first reading (2024)
+        22      1       0x07                                                Month, first reading (July)
+        23      1       0x1a                                                Day, first reading (26)
+        24      1       0x14                                                Hour, first reading (20)
+        25      1       0x0e                                                Minute, first reading (14)
+        26      1       0x27                                                Second, first reading (39)
+        27      1       0x31                                                ***?***
+        28      1       0x64                                                ?Length of trip description with zero terminator (100)
+        29      2       0x01f5                                              Sample count (501)
+        31      2       0x07e8                                              Year, start time (2024)
+        33      1       0x07                                                Month, start time (July)
+        34      1       0x1a                                                Day, start time (26)
+        35      1       0x15                                                Hour, start time (21)
+        36      1       0x26                                                Minute, start time (38)
+        37      1       0x02                                                Second, start time (2)
+        38      99      ...                                                 "THIS IS THE TRIP DESCRIPTION FIELD WHERE YOU CAN SET A FREEFORM MESSAGE THAT IS THIS MAXIMUM LENGTH"
+        138     10      0x47313939473033323633                              Serial number without "EF" (G199G03263)
+        149     2       0x3100                                              ?"1" with zero terminator
+        151     2       0x3100                                              ?"1" with zero terminator
+        153     2       0x0226                                              H1, Temp 2 (55.0)
+        155     2       0xfea2                                              L1, Temp 2 (-35.0)
+        157     2       0x0000 
+        158     1       0xa6                                                ? stop byte, CRC, count, checksum
