@@ -1,4 +1,4 @@
-No.     Time   SRC    DST    Info    Length Leftover Capture Data                                       Comment
+No.     Time   SRC    DST    Info  Leftover Capture Data                                                  Comment
                       
  117 0.421765  host   1.9.2  out   cc000a00d6            
  119 0.423907  1.9.2  host   in    55a5fa       
